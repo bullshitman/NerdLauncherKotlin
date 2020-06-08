@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,7 +42,8 @@ class NerdLauncherActivity : AppCompatActivity() {
         recyclerView.adapter = ActivityAdapter(activities)
     }
     private class ActivityHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        private val nameTextView = itemView as TextView
+        private val nameTextView: TextView = itemView.findViewById(R.id.item_text)
+        private val imageViewItem : ImageView = itemView.findViewById(R.id.item_icon)
         private lateinit var resolveInfo: ResolveInfo
         init {
             nameTextView.setOnClickListener(this)
@@ -50,7 +52,9 @@ class NerdLauncherActivity : AppCompatActivity() {
             this.resolveInfo = resolveInfo
             val packageManager = itemView.context.packageManager
             val appName = resolveInfo.loadLabel(packageManager).toString()
+            val appIcon = resolveInfo.loadIcon(packageManager)
             nameTextView.text = appName
+            imageViewItem.setImageDrawable(appIcon)
         }
 
         override fun onClick(view: View?) {
@@ -68,7 +72,7 @@ class NerdLauncherActivity : AppCompatActivity() {
     private class ActivityAdapter(val activities: List<ResolveInfo>) : RecyclerView.Adapter<ActivityHolder>() {
         override fun onCreateViewHolder(container: ViewGroup, viewType: Int): ActivityHolder {
             val layoutInflater = LayoutInflater.from(container.context)
-            val view = layoutInflater.inflate(android.R.layout.simple_list_item_1, container, false)
+            val view = layoutInflater.inflate(R.layout.recycler_list_item, container, false)
             return ActivityHolder(view)
         }
 
